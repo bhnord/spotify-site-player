@@ -1,21 +1,36 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import WebPlayback from "./components/WebPlayback";
 import Login from "./components/Login";
 import "./App.css";
+import api from "./api/api";
+import RecentSongs from "./components/RecentSongs";
+import TopSongs from "./components/TopSongs";
 
 function App() {
   const [token, setToken] = useState("");
 
   useEffect(() => {
     async function getToken() {
-      const response = await fetch("/auth/token");
-      const json = await response.json();
-      setToken(json.access_token);
+      const token = await api.getToken();
+      setToken(token);
     }
     getToken();
   }, []);
 
-  return <div>{token === "" ? <Login /> : <WebPlayback token={token} />}</div>;
+  return (
+    <div>
+      {token === "" ? (
+        <Login />
+      ) : (
+        <div className="container">
+          <TopSongs top={5} />
+          <RecentSongs />
+
+          <WebPlayback token={token} />
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default App;

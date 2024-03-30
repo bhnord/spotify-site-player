@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-function WebPlayback(props) {
-  const [player, setPlayer] = useState(undefined);
+export default function WebPlayback(props: { token: string }) {
+  const [, setPlayer] = useState(undefined);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -12,7 +12,7 @@ function WebPlayback(props) {
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
-        name: "Web Playback SDK",
+        name: "Ben's Playback B)",
         getOAuthToken: (cb) => {
           cb(props.token);
         },
@@ -44,5 +44,3 @@ function WebPlayback(props) {
     </>
   );
 }
-
-export default WebPlayback;

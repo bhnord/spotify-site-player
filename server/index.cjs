@@ -21,7 +21,9 @@ app.get("/auth/login", (_, res) => {
   var scope =
     "streaming \
                user-read-email \
-               user-read-private";
+               user-read-private \
+               user-top-read \
+               user-read-recently-played";
 
   var state = generateRandomString(16);
 
@@ -69,6 +71,7 @@ app.get("/auth/callback", (req, res) => {
     })
     .catch((error) => {
       if (error.response) {
+        console.log("error");
       }
     });
 });
