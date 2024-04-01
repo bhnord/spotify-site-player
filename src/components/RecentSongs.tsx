@@ -3,6 +3,7 @@ import api, { Artist } from "../api/api";
 
 export default function RecentSongs() {
   const [trackHistory, setTrackHistory] = useState([]);
+  const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
   useEffect(() => {
     async function getHistory() {
@@ -16,13 +17,16 @@ export default function RecentSongs() {
     <div className="container">
       <h3>Recent Songs</h3>
       <div>
-        {trackHistory.map(({ track }) => (
-          <div>
+        {trackHistory.map(({ track, played_at }) => {
+          const curr = new Date(played_at);
+          return (
             <div>
-              {`${track.name} by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}{" "}
+              <div>
+                {`${track.name} by ${track.artists.map((artist: Artist) => artist.name).join(", ")} on ${days[curr.getDay()]} ${curr.getMonth() + 1}-${curr.getDate()}`}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
