@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from "./WebPlayback.module.css";
 
 export default function WebPlayback(props: { token: string }) {
   const [, setPlayer] = useState(undefined);
@@ -39,7 +40,11 @@ export default function WebPlayback(props: { token: string }) {
   return (
     <>
       <div className="container">
-        <div className="main-wrapper"></div>
+        <div className={styles["main-wrapper"]}>
+          <button className={styles.btn}>{"<<"}</button>
+          <div>rect</div>
+          <button className={styles.btn}>{">>"}</button>
+        </div>
       </div>
     </>
   );
