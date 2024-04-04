@@ -8,7 +8,7 @@ export default function RecentSongs() {
     "Sunday",
     "Monday",
     "Tuesday",
-    "Wednesday",
+    "Wed",
     "Thursday",
     "Friday",
     "Saturday",
@@ -24,7 +24,8 @@ export default function RecentSongs() {
 
   return (
     <div className={styles.container}>
-      <h3>Recent Songs</h3>
+      <h2 className={styles.header}>Recent Songs</h2>
+      <hr />
       <div className={styles.content}>
         <div>
           <ul>

@@ -5,8 +5,13 @@
   padding-top: 0px;
 }
 
+.header {
+  font-family: "ghostmeat";
+}
+
 .content {
   font-weight: bold;
+  font-family: "Oswald";
 }
 
 .track {
@@ -15,6 +20,7 @@
 
 .date {
   float: right;
+  font-family: "ghostmeat";
 }
 
 .info {

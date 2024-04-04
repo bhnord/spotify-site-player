@@ -1,5 +1,6 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif,
+    "ghostmeat";
   line-height: 1.5;
   font-weight: 400;
   --main-color: #1e90ff;
@@ -13,6 +14,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: "ghostmeat";
+  src: url(./assets/fonts/ghostmeat/Ghostmeat.otf);
+}
+
+@font-face {
+  font-family: "Oswald";
+  src: url(./assets/fonts/Oswald/Oswald-VariableFont_wght.ttf);
 }
 
 a {
@@ -32,6 +43,14 @@ body {
   min-height: 100vh;
   color: var(--main-color);
   background-color: var(--main-background);
+}
+
+hr {
+  background-color: var(--main-color);
+  border-color: var(--main-color);
+  width: 70%;
+  height: 2px;
+  margin-bottom: 30px;
 }
 
 h1 {

@@ -15,7 +15,8 @@ export default function TopSongs(props: { top: number }) {
   return (
     <>
       <div className={styles.container}>
-        <h3>Ben's Top {props.top}</h3>
+        <h2 className={styles.header}>Ben's Top {props.top}</h2>
+        <hr />
         <div className={styles.content}>
           <div>
             <ul>

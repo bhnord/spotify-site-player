@@ -5,8 +5,13 @@
   padding-top: 0px;
 }
 
+.header {
+  font-family: "ghostmeat";
+}
+
 .content {
   font-weight: bold;
+  font-family: "Oswald";
 }
 
 .track {
@@ -14,6 +19,7 @@
 }
 
 .ranking {
+  font-family: "ghostmeat";
   float: right;
 }
 
