@@ -4,15 +4,7 @@ import styles from "./RecentSongs.module.css";
 
 export default function RecentSongs() {
   const [trackHistory, setTrackHistory] = useState([]);
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wed",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
   useEffect(() => {
     async function getHistory() {
