@@ -71,12 +71,13 @@ app.get("/auth/callback", (req, res) => {
     })
     .catch((error) => {
       if (error.response) {
-        console.log("error");
+        console.log(error);
       }
     });
 });
 
 app.get("/auth/token", (_, res) => {
+  //add option to refresh token
   res.json({
     access_token: access_token,
   });

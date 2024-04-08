@@ -5,7 +5,10 @@ export type Artist = {
 class api {
   token = "";
 
-  async getToken() {
+  async getToken(refresh: boolean = false) {
+    if (refresh) {
+      open("/auth/login", "_self");
+    }
     const response = await fetch("/auth/token");
     const json = await response.json();
     this.token = json.access_token;
@@ -19,7 +22,13 @@ class api {
       },
       method,
     });
-    return await res.json();
+
+    if (res.status == 401) {
+      // refresh token (expires each hour)
+      await this.getToken(true);
+    } else {
+      return await res.json();
+    }
   }
 
   async getTopTracks(top: number) {
