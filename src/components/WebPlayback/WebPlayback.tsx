@@ -15,8 +15,17 @@ export default function WebPlayback(props: { token: string }) {
   const [is_active, setActive] = useState(false);
   const [current_track, setTrack] = useState(track);
   useEffect(() => {
+    const scripts = document.body.getElementsByTagName("script");
+    const spotify_src = "https://sdk.scdn.co/spotify-player.js";
+    for (const script of scripts) {
+      //if script already loaded, return;
+      if (spotify_src == script.attributes.src.nodeValue) {
+        return;
+      }
+    }
+
     const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.src = spotify_src;
     script.async = true;
 
     document.body.appendChild(script);
