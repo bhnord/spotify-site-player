@@ -20,10 +20,10 @@ app.get("/auth", (_, res) => {
 app.get("/auth/login", (_, res) => {
   var scope =
     "streaming \
-               user-read-email \
-               user-read-private \
-               user-top-read \
-               user-read-recently-played";
+     user-read-email \
+     user-read-private \
+     user-top-read \
+     user-read-recently-played";
 
   var state = generateRandomString(16);
 

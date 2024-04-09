@@ -1,11 +1,5 @@
 .main-wrapper {
-  display: inline-flex;
 }
 
-.btn {
-  border-radius: 100%;
-  height: 50px;
-  width: 50px;
-  background-color: var(--main-color);
-  text-align: center;
+.button {
 }

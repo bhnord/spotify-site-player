@@ -2,8 +2,18 @@ import { useState, useEffect } from "react";
 import styles from "./WebPlayback.module.css";
 
 export default function WebPlayback(props: { token: string }) {
-  const [, setPlayer] = useState(undefined);
+  const track = {
+    name: "",
+    album: {
+      images: [{ url: "" }],
+    },
+    artists: [{ name: "" }],
+  };
 
+  const [player, setPlayer] = useState(undefined);
+  const [is_paused, setPaused] = useState(false);
+  const [is_active, setActive] = useState(false);
+  const [current_track, setTrack] = useState(track);
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -13,17 +23,16 @@ export default function WebPlayback(props: { token: string }) {
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
-        name: "Ben's Playback B)",
+        name: "B)",
         getOAuthToken: (cb) => {
           cb(props.token);
         },
         volume: 0.5,
       });
 
-      setPlayer(player);
-
       player.addListener("ready", ({ device_id }: { device_id: string }) => {
         console.log("Ready with Device ID", device_id);
+        setPlayer(player);
       });
 
       player.addListener(
@@ -33,17 +42,77 @@ export default function WebPlayback(props: { token: string }) {
         },
       );
 
+      player.addListener("player_state_changed", (state) => {
+        if (!state) {
+          return;
+        }
+
+        setTrack(state.track_window.current_track);
+        setPaused(state.paused);
+
+        player.getCurrentState().then((state) => {
+          !state ? setActive(false) : setActive(true);
+        });
+      });
+
       player.connect();
     };
   }, []);
+
+  const togglePlay = () => {
+    if (player) {
+      console.log(player);
+      console.log("dd");
+      player.togglePlay();
+    }
+  };
 
   return (
     <>
       <div className="container">
         <div className={styles["main-wrapper"]}>
-          <button className={styles.btn}>{"<<"}</button>
-          <div>rect</div>
-          <button className={styles.btn}>{">>"}</button>
+          <div className={styles.track}>
+            <img
+              src={current_track.album.images[0].url}
+              className="now-playing__cover"
+              alt=""
+            />
+            <div className="now-playing__side">
+              <div className="now-playing__name">{current_track.name}</div>
+
+              <div className="now-playing__artist">
+                {current_track.artists[0].name}
+              </div>
+            </div>
+          </div>
+          <div className={styles.buttons}>
+            <button
+              className={styles.button}
+              onClick={() => {
+                player.previousTrack();
+              }}
+            >
+              &lt;&lt;
+            </button>
+
+            <button
+              className={styles.button}
+              onClick={() => {
+                player.togglePlay();
+              }}
+            >
+              {is_paused ? "PLAY" : "PAUSE"}
+            </button>
+
+            <button
+              className={styles.button}
+              onClick={() => {
+                player.nextTrack();
+              }}
+            >
+              &gt;&gt;
+            </button>
+          </div>
         </div>
       </div>
     </>
