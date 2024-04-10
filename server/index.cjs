@@ -23,6 +23,8 @@ app.get("/auth/login", (_, res) => {
      user-read-email \
      user-read-private \
      user-top-read \
+     user-modify-playback-state \
+     user-read-playback-state \
      user-read-recently-played";
 
   var state = generateRandomString(16);

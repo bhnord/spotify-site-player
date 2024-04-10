@@ -1,5 +1,10 @@
 .main-wrapper {
 }
 
+.now-playing {
+  font-family: "ghostmeat";
+}
+
 .button {
+  margin: 5px;
 }

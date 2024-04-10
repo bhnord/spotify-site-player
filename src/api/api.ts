@@ -15,19 +15,36 @@ class api {
     return json.access_token;
   }
 
-  async #fetchWebApi(endpoint: string, method: string) {
-    const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+  async #fetchWebApi(
+    endpoint: string,
+    method: string,
+    hasJSON: boolean = true,
+    body: string = "",
+  ) {
+    const url = `https://api.spotify.com/${endpoint}`;
+    const req = {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
       method,
-    });
+    };
+
+    if (body != "") {
+      req.body = body;
+    }
+    const res = await fetch(url, req);
 
     if (res.status == 401) {
       // refresh token (expires each hour)
       await this.getToken(true);
     } else {
-      return await res.json();
+      if (res.status != 200) {
+        throw new Error(res.status + "");
+      } else if (hasJSON) {
+        return await res.json();
+      } else {
+        return "";
+      }
     }
   }
 
@@ -45,6 +62,32 @@ class api {
     return (
       await this.#fetchWebApi("v1/me/player/recently-played?limit=10", "GET")
     ).items;
+  }
+
+  async transferPlayback(ids: string[]) {
+    return await this.#fetchWebApi(
+      "v1/me/player",
+      "PUT",
+      false,
+      JSON.stringify({ device_ids: ids }),
+    );
+  }
+
+  async pause() {
+    return await this.#fetchWebApi("v1/me/player/pause", "PUT", false);
+  }
+
+  async play() {
+    return await this.#fetchWebApi("v1/me/player/play", "PUT", false);
+  }
+
+  async togglePlay() {
+    try {
+      const res = await this.#fetchWebApi("v1/me/player", "GET");
+      res.is_playing ? this.pause() : this.play();
+    } catch {
+      console.error("no playback");
+    }
   }
 }
 

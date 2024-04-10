@@ -27,7 +27,7 @@ function App() {
             <div className="section-row">
               <TopSongs top={5} />
             </div>
-            <div className="section-row" style={{ backgroundColor: "black" }}>
+            <div className="section-row">
               <WebPlayback token={token} />
             </div>
           </div>

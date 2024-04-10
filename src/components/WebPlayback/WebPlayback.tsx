@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import styles from "./WebPlayback.module.css";
+import api from "../../api/api";
 
 export default function WebPlayback(props: { token: string }) {
   const track = {
@@ -32,7 +33,7 @@ export default function WebPlayback(props: { token: string }) {
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
-        name: "B)",
+        name: "WebPlayer",
         getOAuthToken: (cb) => {
           cb(props.token);
         },
@@ -41,6 +42,9 @@ export default function WebPlayback(props: { token: string }) {
 
       player.addListener("ready", ({ device_id }: { device_id: string }) => {
         console.log("Ready with Device ID", device_id);
+
+        //set playback to app
+        api.transferPlayback([device_id]);
         setPlayer(player);
       });
 
@@ -64,64 +68,62 @@ export default function WebPlayback(props: { token: string }) {
         });
       });
 
+      player.addListener("autoplay_failed", () => {
+        console.log("Autoplay is not allowed by the browser autoplay rules");
+      });
       player.connect();
     };
   }, []);
-
-  const togglePlay = () => {
-    if (player) {
-      console.log(player);
-      console.log("dd");
-      player.togglePlay();
-    }
-  };
 
   return (
     <>
       <div className="container">
         <div className={styles["main-wrapper"]}>
-          <div className={styles.track}>
-            <img
-              src={current_track.album.images[0].url}
-              className="now-playing__cover"
-              alt=""
-            />
-            <div className="now-playing__side">
-              <div className="now-playing__name">{current_track.name}</div>
+          {is_active ? (
+            <div>
+              <div className={styles.track}>
+                <img
+                  src={current_track.album.images[0].url}
+                  className="now-playing__cover"
+                  alt=""
+                />
+                <div className={styles["now-playing"]}>
+                  <div>{current_track.name}</div>
+                  <div>{current_track.artists[0].name}</div>
+                </div>
+              </div>
+              <div className={styles.buttons}>
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    player.previousTrack();
+                  }}
+                >
+                  &lt;&lt;
+                </button>
 
-              <div className="now-playing__artist">
-                {current_track.artists[0].name}
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    player.togglePlay();
+                  }}
+                >
+                  {is_paused ? "PLAY" : "PAUSE"}
+                </button>
+
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    player.nextTrack();
+                  }}
+                >
+                  &gt;&gt;
+                </button>
               </div>
             </div>
-          </div>
-          <div className={styles.buttons}>
-            <button
-              className={styles.button}
-              onClick={() => {
-                player.previousTrack();
-              }}
-            >
-              &lt;&lt;
-            </button>
-
-            <button
-              className={styles.button}
-              onClick={() => {
-                player.togglePlay();
-              }}
-            >
-              {is_paused ? "PLAY" : "PAUSE"}
-            </button>
-
-            <button
-              className={styles.button}
-              onClick={() => {
-                player.nextTrack();
-              }}
-            >
-              &gt;&gt;
-            </button>
-          </div>
+          ) : (
+            <div>player is inactive</div>
+          )}
         </div>
       </div>
     </>
