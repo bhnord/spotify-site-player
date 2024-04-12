@@ -79,7 +79,7 @@ export default function WebPlayback(props: { token: string }) {
     <>
       <div className="container">
         <div className={styles["main-wrapper"]}>
-          {is_active ? (
+          {is_active && current_track !== null ? (
             <div>
               <div className={styles.track}>
                 <img
