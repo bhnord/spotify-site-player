@@ -48,11 +48,17 @@ class api {
     }
   }
 
-  async getTopTracks(top: number) {
+  async getTopTracks(top: number, time_range: number) {
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
+    const range =
+      time_range === 0
+        ? "short_term"
+        : time_range === 1
+          ? "medium_term"
+          : "long_term";
     return (
       await this.#fetchWebApi(
-        `v1/me/top/tracks?time_range=long_term&limit=${top}`,
+        `v1/me/top/tracks?time_range=${range}&limit=${top}`,
         "GET",
       )
     ).items;

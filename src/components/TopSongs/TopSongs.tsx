@@ -2,20 +2,23 @@ import { useEffect, useState } from "react";
 import api, { Artist } from "../../api/api";
 import styles from "./TopSongs.module.css";
 
-export default function TopSongs(props: { top: number }) {
+export default function TopSongs(props: { top: number; range: number }) {
   const [top, setTop] = useState([]);
+  const period = props.range === 0 ? "4wk" : props.range === 1 ? "6mo" : "1yr";
   useEffect(() => {
     async function getTop() {
-      const tracks = await api.getTopTracks(props.top);
+      const tracks = await api.getTopTracks(props.top, props.range);
       setTop(tracks);
     }
     getTop();
-  }, [props.top]);
+  }, [props.top, props.range]);
 
   return (
     <>
       <div className={styles.container}>
-        <h2 className={styles.header}>Ben's Top {props.top}</h2>
+        <h2 className={styles.header}>
+          Ben's Top {props.top} - {period}
+        </h2>
         <hr />
         <div className={styles.content}>
           <div>
