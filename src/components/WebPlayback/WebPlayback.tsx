@@ -90,51 +90,56 @@ export default function WebPlayback(props: { token: string }) {
                   alt=""
                 />
                 <div className={styles["now-playing"]}>
-                  <div>{current_track.name}</div>
-                  <div>{current_track.artists[0].name}</div>
+                  <div className={styles["curr-track"]}>
+                    {current_track.name}
+                  </div>
+                  <div className={styles.artist}>
+                    {current_track.artists[0].name}
+                  </div>
                 </div>
-              </div>
-              <div className={styles.buttons}>
-                <button
-                  className={styles.button}
-                  onClick={() => {
-                    player.previousTrack();
-                  }}
-                >
-                  &lt;&lt;
-                </button>
-
-                <button
-                  className={styles.button}
-                  onClick={() => {
-                    player.togglePlay();
-                  }}
-                >
-                  {is_paused ? "PLAY" : "PAUSE"}
-                </button>
-
-                <button
-                  className={styles.button}
-                  onClick={() => {
-                    player.nextTrack();
-                  }}
-                >
-                  &gt;&gt;
-                </button>
               </div>
             </div>
           ) : (
             <div>
-              <div>player is inactive</div>
+              <div>[ player is inactive ]</div>
               <button
+                className={styles.button}
                 onClick={() => {
                   api.transferPlayback([device_id]);
                 }}
               >
-                RECONNECT PLAYER TO PAGE
+                RECONNECT PLAYER
               </button>
             </div>
           )}
+          <div className={styles.buttons}>
+            <button
+              className={styles.button}
+              onClick={() => {
+                player.previousTrack();
+              }}
+            >
+              &lt;&lt;
+            </button>
+
+            <button
+              className={styles.button}
+              onClick={() => {
+                player.togglePlay();
+              }}
+            >
+              {is_paused ? "PLAY" : "PAUSE"}
+            </button>
+
+            <button
+              className={styles.button}
+              onClick={() => {
+                player.nextTrack();
+              }}
+            >
+              &gt;&gt;
+            </button>
+          </div>
         </div>
       </div>
     </>

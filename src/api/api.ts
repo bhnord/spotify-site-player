@@ -38,7 +38,7 @@ class api {
       // refresh token (expires each hour)
       await this.getToken(true);
     } else {
-      if (res.status != 200) {
+      if (res.status >= 300) {
         throw new Error(res.status + "");
       } else if (hasJSON) {
         return await res.json();
@@ -83,8 +83,13 @@ class api {
     return await this.#fetchWebApi("v1/me/player/pause", "PUT", false);
   }
 
-  async play() {
-    return await this.#fetchWebApi("v1/me/player/play", "PUT", false);
+  async play(context_uri: string = "") {
+    return await this.#fetchWebApi(
+      "v1/me/player/play",
+      "PUT",
+      false,
+      JSON.stringify({ uris: [context_uri] }),
+    );
   }
 
   async togglePlay() {
@@ -94,6 +99,13 @@ class api {
     } catch {
       console.error("no playback");
     }
+  }
+
+  async skipToNext() {
+    return await this.#fetchWebApi("v1/me/player/next", "POST", false);
+  }
+  async skipToPrevious() {
+    return await this.#fetchWebApi("v1/me/player/previous", "POST", false);
   }
 }
 

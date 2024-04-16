@@ -24,19 +24,32 @@ export default function TopSongs(props: { top: number; range: number }) {
         <div className={styles.content}>
           <div>
             <ul>
-              {top.map(
-                (
-                  { name, artists }: { name: string; artists: Array<Artist> },
-                  index,
-                ) => (
-                  <li className={styles.info}>
-                    <div className={styles.track}>
-                      {`${name} by ${artists.map((artist) => artist.name).join(", ")}`}
-                    </div>
-                    <div className={styles.ranking}>{`${index + 1}`}</div>
-                  </li>
-                ),
-              )}
+              {
+                //TODO: implement play onclick
+
+                top.map(
+                  (
+                    {
+                      name,
+                      artists,
+                      uri,
+                    }: { name: string; artists: Array<Artist> },
+                    index,
+                  ) => (
+                    <li className={styles.info}>
+                      <div
+                        className={styles.track}
+                        onClick={() => {
+                          api.play(uri);
+                        }}
+                      >
+                        {`${name} by ${artists.map((artist) => artist.name).join(", ")}`}
+                      </div>
+                      <div className={styles.ranking}>{`${index + 1}`}</div>
+                    </li>
+                  ),
+                )
+              }
             </ul>
           </div>
         </div>

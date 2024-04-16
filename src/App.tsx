@@ -25,13 +25,13 @@ function App() {
         <div id="container">
           <div className="section-column">
             <div className="section-row">
-              <TopSongs top={5} range={0} />
+              <TopSongs top={5} range={2} />
             </div>
             <div className="section-row">
               <TopSongs top={5} range={1} />
             </div>
             <div className="section-row">
-              <TopSongs top={5} range={2} />
+              <TopSongs top={5} range={0} />
             </div>
           </div>
           <div className="section-column">

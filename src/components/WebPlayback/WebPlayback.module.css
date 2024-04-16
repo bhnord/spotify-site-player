@@ -7,8 +7,26 @@
 
 .now-playing {
   font-family: "Oswald";
+  margin-bottom: 20px;
 }
 
 .button {
   margin: 5px;
+}
+
+.buttons {
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.curr-track {
+  font-size: 1.5em;
+  line-height: 1em;
+}
+.artist {
+  font-size: 1em;
+}
+
+.info {
+  color: white;
 }

@@ -9,6 +9,7 @@ export default function RecentSongs() {
   useEffect(() => {
     async function getHistory() {
       const history = await api.getTrackHistory();
+      console.log(history);
       setTrackHistory(history);
     }
     getHistory();
@@ -25,7 +26,12 @@ export default function RecentSongs() {
               const curr = new Date(played_at);
               return (
                 <li className={styles.info}>
-                  <div className={styles.track}>
+                  <div
+                    className={styles.track}
+                    onClick={() => {
+                      api.play(track.uri);
+                    }}
+                  >
                     {`${track.name} by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}
                   </div>
                   <div className={styles.date}>
