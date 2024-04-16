@@ -21,7 +21,7 @@
 
 .track:hover {
   cursor: pointer;
-  color: green;
+  color: var(--highlight);
 }
 
 .date {

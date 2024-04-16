@@ -8,7 +8,6 @@ export default function TopSongs(props: { top: number; range: number }) {
   useEffect(() => {
     async function getTop() {
       const tracks = await api.getTopTracks(props.top, props.range);
-      console.log(tracks);
       setTop(tracks);
     }
     getTop();
@@ -24,32 +23,28 @@ export default function TopSongs(props: { top: number; range: number }) {
         <div className={styles.content}>
           <div>
             <ul>
-              {
-                //TODO: implement play onclick
-
-                top.map(
-                  (
-                    {
-                      name,
-                      artists,
-                      uri,
-                    }: { name: string; artists: Array<Artist> },
-                    index,
-                  ) => (
-                    <li className={styles.info}>
-                      <div
-                        className={styles.track}
-                        onClick={() => {
-                          api.play(uri);
-                        }}
-                      >
-                        {`${name} by ${artists.map((artist) => artist.name).join(", ")}`}
-                      </div>
-                      <div className={styles.ranking}>{`${index + 1}`}</div>
-                    </li>
-                  ),
-                )
-              }
+              {top.map(
+                (
+                  {
+                    name,
+                    artists,
+                    uri,
+                  }: { name: string; artists: Array<Artist> },
+                  index,
+                ) => (
+                  <li className={styles.info}>
+                    <div
+                      className={styles.track}
+                      onClick={() => {
+                        api.play(uri);
+                      }}
+                    >
+                      {`${name} by ${artists.map((artist) => artist.name).join(", ")}`}
+                    </div>
+                    <div className={styles.ranking}>{`${index + 1}`}</div>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
         </div>

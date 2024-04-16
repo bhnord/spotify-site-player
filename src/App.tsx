@@ -13,6 +13,9 @@ function App() {
     async function getToken() {
       const token = await api.getToken();
       setToken(token);
+      if (token === "") {
+        open("/auth/login", "_self");
+      }
     }
     getToken();
   }, []);

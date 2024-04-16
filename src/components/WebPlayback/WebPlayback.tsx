@@ -60,14 +60,13 @@ export default function WebPlayback(props: { token: string }) {
       player.addListener("player_state_changed", (state) => {
         if (!state) {
           return;
+          setActive(false);
         }
 
         setTrack(state.track_window.current_track);
         setPaused(state.paused);
 
-        player.getCurrentState().then((state) => {
-          !state ? setActive(false) : setActive(true);
-        });
+        !state.track_window.current_track ? setActive(false) : setActive(true);
       });
 
       player.addListener("autoplay_failed", () => {
@@ -76,6 +75,30 @@ export default function WebPlayback(props: { token: string }) {
       player.connect();
     };
   }, []);
+
+  const togglePlay = function () {
+    if (is_active) {
+      player.togglePlay();
+    } else {
+      api.togglePlay();
+    }
+  };
+
+  const skip = () => {
+    if (is_active) {
+      player.nextTrack();
+    } else {
+      api.skipToNext();
+    }
+  };
+
+  const last = () => {
+    if (is_active) {
+      player.previousTrack();
+    } else {
+      api.skipToPrevious();
+    }
+  };
 
   return (
     <>
@@ -116,25 +139,20 @@ export default function WebPlayback(props: { token: string }) {
             <button
               className={styles.button}
               onClick={() => {
-                player.previousTrack();
+                last();
               }}
             >
               &lt;&lt;
             </button>
 
-            <button
-              className={styles.button}
-              onClick={() => {
-                player.togglePlay();
-              }}
-            >
+            <button className={styles.button} onClick={togglePlay}>
               {is_paused ? "PLAY" : "PAUSE"}
             </button>
 
             <button
               className={styles.button}
               onClick={() => {
-                player.nextTrack();
+                skip();
               }}
             >
               &gt;&gt;

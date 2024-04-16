@@ -84,12 +84,16 @@ class api {
   }
 
   async play(context_uri: string = "") {
-    return await this.#fetchWebApi(
-      "v1/me/player/play",
-      "PUT",
-      false,
-      JSON.stringify({ uris: [context_uri] }),
-    );
+    if (context_uri === "") {
+      return await this.#fetchWebApi("v1/me/player/play", "PUT", false);
+    } else {
+      return await this.#fetchWebApi(
+        "v1/me/player/play",
+        "PUT",
+        false,
+        JSON.stringify({ uris: [context_uri] }),
+      );
+    }
   }
 
   async togglePlay() {

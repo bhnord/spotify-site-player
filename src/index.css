@@ -5,6 +5,7 @@
   font-weight: 400;
   --main-background: #121212;
   --main-color: #fc8c5b;
+  --highlight: #d6e681;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
