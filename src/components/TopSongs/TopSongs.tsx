@@ -8,6 +8,7 @@ export default function TopSongs(props: { top: number; range: number }) {
   useEffect(() => {
     async function getTop() {
       const tracks = await api.getTopTracks(props.top, props.range);
+      console.log(tracks);
       setTop(tracks);
     }
     getTop();

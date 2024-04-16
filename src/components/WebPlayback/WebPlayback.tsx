@@ -15,6 +15,7 @@ export default function WebPlayback(props: { token: string }) {
   const [is_paused, setPaused] = useState(false);
   const [is_active, setActive] = useState(false);
   const [current_track, setTrack] = useState(track);
+  const [device_id, setDeviceId] = useState("");
   useEffect(() => {
     const scripts = document.body.getElementsByTagName("script");
     const spotify_src = "https://sdk.scdn.co/spotify-player.js";
@@ -45,6 +46,7 @@ export default function WebPlayback(props: { token: string }) {
 
         //set playback to app
         api.transferPlayback([device_id]);
+        setDeviceId(device_id);
         setPlayer(player);
       });
 
@@ -122,7 +124,16 @@ export default function WebPlayback(props: { token: string }) {
               </div>
             </div>
           ) : (
-            <div>player is inactive</div>
+            <div>
+              <div>player is inactive</div>
+              <button
+                onClick={() => {
+                  api.transferPlayback([device_id]);
+                }}
+              >
+                RECONNECT PLAYER TO PAGE
+              </button>
+            </div>
           )}
         </div>
       </div>

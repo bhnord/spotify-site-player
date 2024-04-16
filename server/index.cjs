@@ -12,6 +12,7 @@ let spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 let app = express();
 
 let access_token = "";
+let refresh_token = "";
 
 app.get("/auth", (_, res) => {
   res.redirect("https://google.com");
@@ -68,6 +69,7 @@ app.get("/auth/callback", (req, res) => {
     .then((response) => {
       if (response.status === 200) {
         access_token = response.data.access_token;
+        refresh_token = response.data.refresh_token;
         res.redirect("/");
       }
     })
@@ -85,13 +87,41 @@ app.get("/auth/token", (_, res) => {
   });
 });
 
+//TODO: Test Function
+app.get("/auth/refresh_token", function (_, res) {
+  let authOptions = {
+    url: "https://accounts.spotify.com/api/token",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      Authorization:
+        "Basic " +
+        new Buffer.from(
+          spotify_client_id + ":" + spotify_client_secret,
+        ).toString("base64"),
+    },
+    form: {
+      grant_type: "refresh_token",
+      refresh_token: refresh_token,
+    },
+    json: true,
+  };
+
+  axios(authOptions).then((response) => {
+    if (response.status === 200) {
+      access_token = response.data.access_token;
+      refresh_token = response.data.refresh_token;
+      res.send({ access_token: access_token });
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });
 
-var generateRandomString = function (length) {
-  var text = "";
-  var possible =
+const generateRandomString = function (length) {
+  let text = "";
+  let possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   for (let i = 0; i < length; i++) {
