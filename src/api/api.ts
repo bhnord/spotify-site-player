@@ -4,6 +4,7 @@ export type Artist = {
 
 class api {
   token = "";
+  spotify_id = "shr4yhlvorob9kwnv8uy1a6z4";
 
   async getToken(refresh: boolean = false) {
     if (refresh) {
@@ -83,17 +84,26 @@ class api {
     return await this.#fetchWebApi("v1/me/player/pause", "PUT", false);
   }
 
-  async play(context_uri: string = "") {
-    if (context_uri === "") {
+  async play(uri: string = "") {
+    if (uri === "") {
       return await this.#fetchWebApi("v1/me/player/play", "PUT", false);
     } else {
       return await this.#fetchWebApi(
         "v1/me/player/play",
         "PUT",
         false,
-        JSON.stringify({ uris: [context_uri] }),
+        JSON.stringify({ uris: [uri] }),
       );
     }
+  }
+
+  async playContext(context_uri) {
+    return await this.#fetchWebApi(
+      "v1/me/player/play",
+      "PUT",
+      false,
+      JSON.stringify({ context_uri: context_uri }),
+    );
   }
 
   async togglePlay() {
@@ -108,8 +118,27 @@ class api {
   async skipToNext() {
     return await this.#fetchWebApi("v1/me/player/next", "POST", false);
   }
+
   async skipToPrevious() {
     return await this.#fetchWebApi("v1/me/player/previous", "POST", false);
+  }
+
+  async getPlaylists(num: number) {
+    return (
+      await this.#fetchWebApi(
+        `v1/users/${this.spotify_id}/playlists?limit=${num}`,
+        "GET",
+      )
+    ).items;
+  }
+
+  async getLikedSongs(limit: number, offset: number) {
+    return (
+      await this.#fetchWebApi(
+        `v1/me/tracks?limit=${limit}&offset=${offset}`,
+        "GET",
+      )
+    ).items;
   }
 }
 

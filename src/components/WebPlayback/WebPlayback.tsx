@@ -16,6 +16,7 @@ export default function WebPlayback(props: { token: string }) {
   const [is_active, setActive] = useState(false);
   const [current_track, setTrack] = useState(track);
   const [device_id, setDeviceId] = useState("");
+  const [context, setContext] = useState({});
   useEffect(() => {
     const scripts = document.body.getElementsByTagName("script");
     const spotify_src = "https://sdk.scdn.co/spotify-player.js";
@@ -63,6 +64,7 @@ export default function WebPlayback(props: { token: string }) {
           setActive(false);
         }
 
+        setContext(state.context);
         setTrack(state.track_window.current_track);
         setPaused(state.paused);
 
@@ -106,6 +108,13 @@ export default function WebPlayback(props: { token: string }) {
         <div className={styles["main-wrapper"]}>
           {is_active && current_track !== null ? (
             <div>
+              {context.uri !== "" ? (
+                <div className={styles.playlist}>
+                  Playlist: {context.metadata.context_description}
+                </div>
+              ) : (
+                <div></div>
+              )}
               <div className={styles.track}>
                 <img
                   src={current_track.album.images[0].url}

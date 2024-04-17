@@ -14,12 +14,12 @@
   font-family: "Oswald";
 }
 
-.track {
+.playlist {
   float: left;
   font-size: 1.1em;
 }
 
-.track:hover {
+.playlist:hover {
   cursor: pointer;
   color: var(--highlight);
 }
@@ -27,7 +27,6 @@
 .ranking {
   font-family: "Oswald";
   float: right;
-  font-size: 1.2em;
 }
 
 .info {

@@ -9,7 +9,6 @@ export default function RecentSongs() {
   useEffect(() => {
     async function getHistory() {
       const history = await api.getTrackHistory();
-      console.log(history);
       setTrackHistory(history);
     }
     getHistory();

@@ -24,10 +24,9 @@
   color: var(--highlight);
 }
 
-.ranking {
-  font-family: "Oswald";
+.date {
   float: right;
-  font-size: 1.2em;
+  font-family: "Oswald";
 }
 
 .info {

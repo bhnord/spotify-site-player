@@ -5,6 +5,8 @@ import "./App.css";
 import api from "./api/api";
 import RecentSongs from "./components/RecentSongs/RecentSongs";
 import TopSongs from "./components/TopSongs/TopSongs";
+import Playlists from "./components/Playlists/Playlists";
+import LikedSongs from "./components/LikedSongs/LikedSongs";
 
 function App() {
   const [token, setToken] = useState("");
@@ -28,18 +30,24 @@ function App() {
         <div id="container">
           <div className="section-column">
             <div className="section-row">
-              <TopSongs top={5} range={2} />
+              <TopSongs top={10} range={2} />
             </div>
             <div className="section-row">
-              <TopSongs top={5} range={1} />
+              <TopSongs top={10} range={1} />
             </div>
             <div className="section-row">
-              <TopSongs top={5} range={0} />
+              <TopSongs top={10} range={0} />
             </div>
           </div>
           <div className="section-column">
             <div className="section-row">
+              <LikedSongs num={10} />
+            </div>
+            <div className="section-row">
               <RecentSongs />
+            </div>
+            <div className="section-row">
+              <Playlists num={10} />
             </div>
             <div className="section-row">
               <WebPlayback token={token} />
