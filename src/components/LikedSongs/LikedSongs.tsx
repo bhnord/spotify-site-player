@@ -4,16 +4,16 @@ import api from "../../api/api";
 
 export default function LikedSongs(props: { num: number }) {
   const [liked_songs, setLikedSongs] = useState([]);
-  const [offset, setOffset] = useState(0);
+  const [page, setPageNum] = useState(0);
+  const [maxPage, setMaxPage] = useState(0);
   useEffect(() => {
-    console.log("dd");
     async function getSongs() {
-      const songs = await api.getLikedSongs(props.num, offset);
-      setLikedSongs(songs);
-      console.log(songs);
+      const res = await api.getLikedSongsResp(props.num, page * props.num);
+      setMaxPage(Math.ceil(res.total / props.num) - 1);
+      setLikedSongs(res.items);
     }
     getSongs();
-  }, [props.num, offset]);
+  }, [props.num, page]);
 
   return (
     <>
@@ -46,6 +46,27 @@ export default function LikedSongs(props: { num: number }) {
             </ul>
           </div>
         </div>
+        <section id={styles.footer}>
+          <div
+            id={styles.last}
+            onClick={() => {
+              setPageNum(Math.max(0, page - 1));
+            }}
+          >
+            &lt;
+          </div>
+          <div>
+            page {page + 1} / {maxPage + 1}
+          </div>
+          <div
+            id={styles.next}
+            onClick={() => {
+              setPageNum(Math.min(page + 1, maxPage));
+            }}
+          >
+            &gt;
+          </div>
+        </section>
       </div>
     </>
   );

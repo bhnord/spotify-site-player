@@ -123,22 +123,18 @@ class api {
     return await this.#fetchWebApi("v1/me/player/previous", "POST", false);
   }
 
-  async getPlaylists(num: number) {
-    return (
-      await this.#fetchWebApi(
-        `v1/users/${this.spotify_id}/playlists?limit=${num}`,
-        "GET",
-      )
-    ).items;
+  async getPlaylistsResp(limit: number, offset: number) {
+    return await this.#fetchWebApi(
+      `v1/users/${this.spotify_id}/playlists?limit=${limit}&offset=${offset}`,
+      "GET",
+    );
   }
 
-  async getLikedSongs(limit: number, offset: number) {
-    return (
-      await this.#fetchWebApi(
-        `v1/me/tracks?limit=${limit}&offset=${offset}`,
-        "GET",
-      )
-    ).items;
+  async getLikedSongsResp(limit: number, offset: number) {
+    return await this.#fetchWebApi(
+      `v1/me/tracks?limit=${limit}&offset=${offset}`,
+      "GET",
+    );
   }
 }
 

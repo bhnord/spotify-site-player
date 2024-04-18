@@ -34,3 +34,22 @@
   display: inline-block;
   width: 100%;
 }
+
+#next,
+#last {
+  padding: 0px 12px;
+  border-radius: 12px;
+  border: 2px solid var(--main-color);
+}
+#next:hover,
+#last:hover {
+  cursor: pointer;
+  background-color: var(--highlight);
+}
+
+#footer > div {
+  display: inline-block;
+  margin: 15px 15px 10px 15px;
+  font-family: "Oswald";
+  font-size: 1.1em;
+}

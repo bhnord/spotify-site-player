@@ -5,8 +5,9 @@
   padding-top: 0px;
 }
 
-.header {
+#title {
   font-family: "ghostmeat";
+  font-size: 1.5em;
 }
 
 .content {
@@ -34,4 +35,31 @@
   list-style-type: none;
   display: inline-block;
   width: 100%;
+}
+
+#next,
+#last {
+  padding: 0px 12px;
+  border-radius: 12px;
+  border: 2px solid var(--main-color);
+  font-family: "Oswald";
+
+  width: 30px;
+  font-size: 1.1em;
+  line-height: 1.8em;
+}
+
+#next:hover,
+#last:hover {
+  cursor: pointer;
+  background-color: var(--highlight);
+}
+
+#header {
+  display: flex;
+  justify-content: space-between;
+}
+
+#header > div {
+  margin: 30px 15px 10px 15px;
 }

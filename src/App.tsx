@@ -27,34 +27,36 @@ function App() {
       {token === "" ? (
         <Login />
       ) : (
-        <div id="container">
-          <div className="section-column">
-            <div className="section-row">
-              <TopSongs top={10} range={2} />
+        <>
+          <div id="container">
+            <div className="section-column">
+              <div className="section-row">
+                <TopSongs top={10} />
+              </div>
+              <div className="section-row">
+                <RecentSongs />
+              </div>
             </div>
-            <div className="section-row">
-              <TopSongs top={10} range={1} />
-            </div>
-            <div className="section-row">
-              <TopSongs top={10} range={0} />
-            </div>
-          </div>
-          <div className="section-column">
-            <div className="section-row">
-              <LikedSongs num={10} />
-            </div>
-            <div className="section-row">
-              <RecentSongs />
-            </div>
-            <div className="section-row">
-              <Playlists num={10} />
-            </div>
-            <div className="section-row">
-              <WebPlayback token={token} />
+            <div className="section-column">
+              <div className="section-row">
+                <LikedSongs num={10} />
+              </div>
+              <div className="section-row">
+                <Playlists num={10} />
+              </div>
             </div>
           </div>
-        </div>
+          <div id="playback">
+            <WebPlayback token={token} />
+          </div>
+        </>
       )}
+
+      <br />
+      <br />
+      <br />
+      <br />
+      <div>copyright: yo mama</div>
     </div>
   );
 }
