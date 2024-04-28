@@ -110,7 +110,8 @@ export default function WebPlayback(props: { token: string }) {
             <div>
               {context.uri !== "" ? (
                 <div className={styles.playlist}>
-                  Playlist: {context.metadata.context_description}
+                  {context.uri.split(":")[1].toUpperCase()}:{" "}
+                  {context.metadata.context_description}
                 </div>
               ) : (
                 <div></div>
