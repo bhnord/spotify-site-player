@@ -102,16 +102,20 @@ export default function WebPlayback(props: { token: string }) {
     }
   };
 
+  //TODO: fix some issues getting metadata
+
   return (
     <>
       <div className="container">
         <div className={styles["main-wrapper"]}>
           {is_active && current_track !== null ? (
             <div>
-              {context.uri !== "" ? (
+              {context.uri !== "" && "uri" in context ? (
                 <div className={styles.playlist}>
-                  {context.uri.split(":")[1].toUpperCase()}:{" "}
-                  {context.metadata.context_description}
+                  <div>
+                    {context.uri.split(":")[1]}:{" "}
+                    {context.metadata.context_description}
+                  </div>
                 </div>
               ) : (
                 <div></div>
@@ -119,8 +123,8 @@ export default function WebPlayback(props: { token: string }) {
               <div className={styles.track}>
                 <img
                   src={current_track.album.images[0].url}
-                  className="now-playing__cover"
                   alt=""
+                  className={styles["now-playing-cover"]}
                 />
                 <div className={styles["now-playing"]}>
                   <div className={styles["curr-track"]}>

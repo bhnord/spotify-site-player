@@ -24,13 +24,13 @@ export default function RecentSongs() {
             {trackHistory.map(({ track, played_at }) => {
               const curr = new Date(played_at);
               return (
-                <li className={styles.info}>
-                  <div
-                    className={styles.track}
-                    onClick={() => {
-                      api.play(track.uri);
-                    }}
-                  >
+                <li
+                  className={styles.info}
+                  onClick={() => {
+                    api.play(track.uri);
+                  }}
+                >
+                  <div className={styles.track}>
                     {`${track.name} by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}
                   </div>
                   <div className={styles.date}>

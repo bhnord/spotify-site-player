@@ -37,3 +37,10 @@
   margin-bottom: 20px;
   font-weight: 888;
 }
+
+.now-playing-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding-bottom: 15px;
+}

@@ -27,13 +27,13 @@ export default function LikedSongs(props: { num: number }) {
                 ({ track, added_at }: { name: string; uri: string }) => {
                   const curr = new Date(added_at);
                   return (
-                    <li className={styles.info}>
-                      <div
-                        className={styles.track}
-                        onClick={() => {
-                          api.play(track.uri);
-                        }}
-                      >
+                    <li
+                      className={styles.info}
+                      onClick={() => {
+                        api.play(track.uri);
+                      }}
+                    >
+                      <div className={styles.track}>
                         {`${track.name} by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}
                       </div>
                       <div className={styles.date}>

@@ -55,13 +55,13 @@ export default function TopSongs(props: { top: number }) {
                   }: { name: string; artists: Array<Artist>; uri: string },
                   index,
                 ) => (
-                  <li className={styles.info}>
-                    <div
-                      className={styles.track}
-                      onClick={() => {
-                        api.play(uri);
-                      }}
-                    >
+                  <li
+                    className={styles.info}
+                    onClick={() => {
+                      api.play(uri);
+                    }}
+                  >
+                    <div className={styles.track}>
                       {`${name} by ${artists.map((artist) => artist.name).join(", ")}`}
                     </div>
                     <div className={styles.ranking}>{`${index + 1}`}</div>
