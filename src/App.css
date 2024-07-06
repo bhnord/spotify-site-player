@@ -25,3 +25,52 @@
   margin: auto;
   width: 30%;
 }
+
+.help-button {
+  height: 2em;
+  width: 2em;
+  border-radius: 50%;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  color: var(--main-color);
+  border: 1px solid var(--main-color);
+}
+
+#close-popup-button {
+  float: right;
+}
+
+.help-button:hover {
+  color: var(--highlight);
+  border: 1px solid var(--highlight);
+}
+
+.hidden {
+  display: none;
+  transition: 2s;
+}
+
+#help-popup {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: auto;
+  width: 75%;
+  height: 75vh;
+  max-width: 800px;
+  border: 2px solid var(--main-color);
+  border-radius: 12px;
+  padding: 20px;
+  background-color: black;
+}
+
+#background-opacity {
+  opacity: 0.4;
+  background-color: black;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+}

@@ -20,7 +20,8 @@
   font-size: 1.1em;
 }
 
-.info:hover {
+.info:hover,
+#title:hover {
   cursor: pointer;
   color: var(--highlight);
 }

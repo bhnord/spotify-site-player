@@ -136,6 +136,14 @@ class api {
       "GET",
     );
   }
+
+  async addToQueue(uri: string) {
+    return await this.#fetchWebApi(
+      `v1/me/player/queue?uri=${uri}`,
+      "POST",
+      false,
+    );
+  }
 }
 
 export default new api();

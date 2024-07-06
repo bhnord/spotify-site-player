@@ -16,7 +16,16 @@ export default function RecentSongs() {
 
   return (
     <div className={styles.container}>
-      <h2 id={styles.header}>Recent Songs</h2>
+      <h2
+        id={styles.header}
+        onClick={async () => {
+          for (const { track } of trackHistory) {
+            await api.addToQueue(track.uri);
+          }
+        }}
+      >
+        Recent Songs
+      </h2>
       <hr />
       <div className={styles.content}>
         <div>

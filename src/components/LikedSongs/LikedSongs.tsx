@@ -18,7 +18,16 @@ export default function LikedSongs(props: { num: number }) {
   return (
     <>
       <div className={styles.container}>
-        <h2 className={styles.header}>Ben's Liked Songs</h2>
+        <h2
+          className={styles.header}
+          onClick={async () => {
+            for (const { track } of liked_songs) {
+              await api.addToQueue(track.uri);
+            }
+          }}
+        >
+          Ben's Liked Songs
+        </h2>
         <hr />
         <div className={styles.content}>
           <div>

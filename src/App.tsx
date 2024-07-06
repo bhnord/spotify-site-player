@@ -7,6 +7,7 @@ import RecentSongs from "./components/RecentSongs/RecentSongs";
 import TopSongs from "./components/TopSongs/TopSongs";
 import Playlists from "./components/Playlists/Playlists";
 import LikedSongs from "./components/LikedSongs/LikedSongs";
+import Instructions from "./components/Instructions/Instructions";
 
 function App() {
   const [token, setToken] = useState("");
@@ -22,6 +23,13 @@ function App() {
     getToken();
   }, []);
 
+  const togglePopup = () => {
+    const popup = document.getElementById("help-popup");
+    const background = document.getElementById("background-opacity");
+    popup?.classList.toggle("hidden");
+    background?.classList.toggle("hidden");
+  };
+
   return (
     <div>
       {token === "" ? (
@@ -29,6 +37,16 @@ function App() {
       ) : (
         <>
           <div id="container">
+            <div id="background-opacity" className="hidden"></div>
+            <div id="help-popup" className="hidden">
+              <button id="close-popup-button" onClick={togglePopup}>
+                X
+              </button>
+              <Instructions />
+            </div>
+            <button className="help-button" onClick={togglePopup}>
+              ?
+            </button>
             <div className="section-column">
               <div className="section-row">
                 <TopSongs top={10} />
@@ -51,12 +69,6 @@ function App() {
           </div>
         </>
       )}
-
-      <br />
-      <br />
-      <br />
-      <br />
-      <div>copyright: yo mama</div>
     </div>
   );
 }

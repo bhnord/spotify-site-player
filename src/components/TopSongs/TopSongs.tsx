@@ -27,7 +27,14 @@ export default function TopSongs(props: { top: number }) {
             &lt;
           </div>
 
-          <div id={styles.title}>
+          <div
+            id={styles.title}
+            onClick={async () => {
+              for (const { uri } of topSongs) {
+                await api.addToQueue(uri);
+              }
+            }}
+          >
             Ben's Top {props.top} -{" "}
             {range === 0 ? "4wk" : range === 1 ? "6mo" : "1yr"}
           </div>
