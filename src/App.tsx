@@ -30,23 +30,43 @@ function App() {
     background?.classList.toggle("hidden");
   };
 
+  const playOnPi = async () => {
+    const availableDevices = await api.getAvailableDevices();
+
+    availableDevices.devices.map(
+      async ({ id, name }: { id: string; name: string }) => {
+        if (name === "raspberry pi") {
+          console.log(id);
+          await api.transferPlayback([id]);
+          await api.play();
+        }
+      },
+    );
+  };
+
   return (
     <div>
       {token === "" ? (
         <Login />
       ) : (
         <>
+          <div id="background-opacity" className="hidden"></div>
+          <div className="button-bar">
+            <button className="help-button" onClick={togglePopup}>
+              ?
+            </button>
+            <button className="play-on-pi-button" onClick={playOnPi}>
+              play on pi
+            </button>
+          </div>
           <div id="container">
-            <div id="background-opacity" className="hidden"></div>
             <div id="help-popup" className="hidden">
               <button id="close-popup-button" onClick={togglePopup}>
                 X
               </button>
               <Instructions />
             </div>
-            <button className="help-button" onClick={togglePopup}>
-              ?
-            </button>
+
             <div className="section-column">
               <div className="section-row">
                 <TopSongs top={10} />

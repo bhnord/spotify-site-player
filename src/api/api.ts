@@ -144,6 +144,10 @@ class api {
       false,
     );
   }
+
+  async getAvailableDevices() {
+    return await this.#fetchWebApi(`v1/me/player/devices`, "GET");
+  }
 }
 
 export default new api();
