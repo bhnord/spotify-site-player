@@ -8,6 +8,7 @@ dotenv.config();
 
 let spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 let spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+let ip = process.env.HOST_IP;
 
 let app = express();
 
@@ -35,7 +36,7 @@ app.get("/auth/login", (_, res) => {
     response_type: "code",
     client_id: spotify_client_id,
     scope: scope,
-    redirect_uri: "http://localhost:3000/auth/callback",
+    redirect_uri: `http://${ip}:3000/auth/callback`,
     state: state,
   });
 
@@ -53,7 +54,7 @@ app.get("/auth/callback", (req, res) => {
     url: "https://accounts.spotify.com/api/token",
     data: {
       code: code,
-      redirect_uri: "http://localhost:3000/auth/callback",
+      redirect_uri: `http://${ip}:3000/auth/callback`,
       grant_type: "authorization_code",
     },
     headers: {
@@ -117,7 +118,7 @@ app.get("/auth/refresh_token", function (_, res) {
 });
 
 app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+  console.log(`Listening at http://${ip}:${port}`);
 });
 
 const generateRandomString = function (length) {
