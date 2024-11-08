@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import WebPlayback from "./components/WebPlayback/WebPlayback";
 import Login from "./components/Login";
 import "./App.css";
@@ -10,14 +10,18 @@ import LikedSongs from "./components/LikedSongs/LikedSongs";
 import Instructions from "./components/Instructions/Instructions";
 
 function App() {
-  const [token, setToken] = useState("");
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("access_token") || "";
+  const refreshToken = urlParams.get("refresh_token") || "";
+  console.log(token);
 
   useEffect(() => {
     async function getToken() {
-      const token = await api.getToken();
-      setToken(token);
-      if (token === "") {
+      if (!token || !refreshToken) {
         open("/auth/login", "_self");
+      } else {
+        api.token = token;
+        api.refreshToken = refreshToken;
       }
     }
     getToken();

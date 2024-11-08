@@ -43,7 +43,10 @@ export default function LikedSongs(props: { num: number }) {
                       }}
                     >
                       <div className={styles.track}>
-                        {`${track.name} by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}
+                        <span>{`${track.name}`}</span>
+                        <span
+                          style={{ color: "#f7d6c5", opacity: 0.5 }}
+                        >{` by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}</span>
                       </div>
                       <div className={styles.date}>
                         {`${curr.getMonth() + 1}-${curr.getDate()}-${curr.getFullYear()}`}

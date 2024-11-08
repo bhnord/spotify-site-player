@@ -3,8 +3,12 @@ export type Artist = {
 };
 
 class api {
-  token = "";
-  spotify_id = "shr4yhlvorob9kwnv8uy1a6z4";
+  token: string = "";
+  refreshToken: string = "";
+  spotify_id: string = "shr4yhlvorob9kwnv8uy1a6z4";
+
+  //TODO: change
+  serverUrl = "http://localhost:5000";
 
   async getToken(refresh: boolean = false) {
     if (refresh) {
@@ -49,6 +53,13 @@ class api {
     }
   }
 
+  async #fetchServerApi(endpoint: string) {
+    const url = this.serverUrl + endpoint;
+    const res = (await fetch(url)).json();
+    console.log(res);
+    return res;
+  }
+
   async getTopTracks(top: number, time_range: number) {
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const range =
@@ -58,17 +69,14 @@ class api {
           ? "medium_term"
           : "long_term";
     return (
-      await this.#fetchWebApi(
-        `v1/me/top/tracks?time_range=${range}&limit=${top}`,
-        "GET",
+      await this.#fetchServerApi(
+        `/spotify/getTopTracks?time_range=${range}&limit=${top}`,
       )
     ).items;
   }
 
   async getTrackHistory() {
-    return (
-      await this.#fetchWebApi("v1/me/player/recently-played?limit=10", "GET")
-    ).items;
+    return (await this.#fetchServerApi("/spotify/getTrackHistory")).items;
   }
 
   async transferPlayback(ids: string[]) {
@@ -124,16 +132,14 @@ class api {
   }
 
   async getPlaylistsResp(limit: number, offset: number) {
-    return await this.#fetchWebApi(
-      `v1/users/${this.spotify_id}/playlists?limit=${limit}&offset=${offset}`,
-      "GET",
+    return await this.#fetchServerApi(
+      `/spotify/getPlaylists?limit=${limit}&offset=${offset}`,
     );
   }
 
   async getLikedSongsResp(limit: number, offset: number) {
-    return await this.#fetchWebApi(
-      `v1/me/tracks?limit=${limit}&offset=${offset}`,
-      "GET",
+    return await this.#fetchServerApi(
+      `/spotify/getLikedSongs?limit=${limit}&offset=${offset}`,
     );
   }
 

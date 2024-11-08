@@ -69,7 +69,10 @@ export default function TopSongs(props: { top: number }) {
                     }}
                   >
                     <div className={styles.track}>
-                      {`${name} by ${artists.map((artist) => artist.name).join(", ")}`}
+                      <span>{`${name}`}</span>
+                      <span
+                        style={{ color: "#f7d6c5", opacity: 0.5 }}
+                      >{` by ${artists.map((artist: Artist) => artist.name).join(", ")}`}</span>
                     </div>
                     <div className={styles.ranking}>{`${index + 1}`}</div>
                   </li>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api, { Artist } from "../../api/api";
 import styles from "./RecentSongs.module.css";
 
+//TODO: remove duplicates
 export default function RecentSongs() {
   const [trackHistory, setTrackHistory] = useState([]);
   const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
@@ -40,7 +41,10 @@ export default function RecentSongs() {
                   }}
                 >
                   <div className={styles.track}>
-                    {`${track.name} by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}
+                    <span>{`${track.name}`}</span>
+                    <span
+                      style={{ color: "#f7d6c5", opacity: 0.5 }}
+                    >{` by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}</span>
                   </div>
                   <div className={styles.date}>
                     {`${days[curr.getDay()]} ${curr.getMonth() + 1}-${curr.getDate()}`}
