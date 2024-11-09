@@ -3,26 +3,28 @@ const dotenv = require("dotenv");
 const axios = require("axios");
 const fs = require("fs");
 
-const port = 5000;
 const TOKENS_FILE = ".tokens.json";
 
 dotenv.config();
 
-let spotify_id = "shr4yhlvorob9kwnv8uy1a6z4";
-let spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
-let spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-let website_url = process.env.WEBSITE_URL;
-let ip = process.env.HOST_IP;
+const spotify_id = process.env.SPOTIFY_ID;
+const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
+const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+const port = process.env.PORT;
+const client_url = process.env.CLIENT_URL;
+const server_url = process.env.SERVER_URL;
 
 let access_token = "";
 let refresh_token = "";
+
+let justRefreshed = false;
 
 readTokens();
 
 let app = express();
 
 app.use(function (_, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", website_url);
+  res.setHeader("Access-Control-Allow-Origin", client_url);
   res.setHeader("Access-Control-Allow-Methods", "GET");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -35,7 +37,7 @@ app.get("/auth", (_, res) => {
   res.redirect("https://google.com");
 });
 
-//server scopes
+// server scopes
 //     "user-read-email \
 //     user-read-private \
 //     user-top-read \
@@ -55,7 +57,7 @@ app.get("/auth/login", (_, res) => {
     response_type: "code",
     client_id: spotify_client_id,
     scope: scope,
-    redirect_uri: `http://${ip}:3000/auth/callback`,
+    redirect_uri: `${client_url}/auth/callback`,
     state: state,
   });
 
@@ -73,7 +75,7 @@ app.get("/auth/callback", (req, res) => {
     url: "https://accounts.spotify.com/api/token",
     data: {
       code: code,
-      redirect_uri: `http://${ip}:3000/auth/callback`,
+      redirect_uri: `${client_url}/auth/callback`,
       grant_type: "authorization_code",
     },
     headers: {
@@ -104,7 +106,7 @@ app.get("/auth/callback", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening at http://${ip}:${port}`);
+  console.log(`Listening at ${server_url}:${port}`);
 });
 
 const generateRandomString = function (length) {
@@ -157,7 +159,13 @@ app.get("/spotify/getTopTracks", async function (req, res) {
   );
 });
 
-async function fetchWebApi(endpoint, method, hasJSON = true, body = "") {
+async function fetchWebApi(
+  endpoint,
+  method,
+  hasJSON = true,
+  body = "",
+  refreshOnFail = true,
+) {
   const url = `https://api.spotify.com/${endpoint}`;
   const req = {
     headers: {
@@ -174,7 +182,11 @@ async function fetchWebApi(endpoint, method, hasJSON = true, body = "") {
   if (res.status == 401 || res.status == 405) {
     // refresh token and retry
     await refreshToken();
-    return await fetchWebApi(endpoint, method, hasJSON, body);
+
+    //retry once with new tokens
+    if (refreshOnFail) {
+      return await fetchWebApi(endpoint, method, hasJSON, body, false);
+    }
   } else {
     if (res.status >= 300) {
       refreshToken();
@@ -220,7 +232,6 @@ async function refreshToken() {
     }
   } catch (err) {
     console.error("failed to refresh token");
-    console.error(err);
   }
 }
 
