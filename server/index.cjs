@@ -1,23 +1,25 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const axios = require("axios");
+const fs = require("fs");
 
 const port = 5000;
+const TOKENS_FILE = ".tokens.json";
 
 dotenv.config();
 
 let spotify_id = "shr4yhlvorob9kwnv8uy1a6z4";
 let spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 let spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+let website_url = process.env.WEBSITE_URL;
 let ip = process.env.HOST_IP;
 
-let access_token = process.env.ACCESS_TOKEN;
-let refresh_token = process.env.REFRESH_TOKEN;
+let access_token = "";
+let refresh_token = "";
+
+readTokens();
 
 let app = express();
-
-//TODO: get through file
-let website_url = "http://localhost:3000";
 
 app.use(function (_, res, next) {
   res.setHeader("Access-Control-Allow-Origin", website_url);
@@ -33,16 +35,19 @@ app.get("/auth", (_, res) => {
   res.redirect("https://google.com");
 });
 
+//server scopes
+//     "user-read-email \
+//     user-read-private \
+//     user-top-read \
+//     user-read-recently-played \
+//     user-library-read";
+
 app.get("/auth/login", (_, res) => {
   var scope =
     "streaming \
-     user-read-email \
-     user-read-private \
-     user-top-read \
      user-modify-playback-state \
      user-read-playback-state \
-     user-read-recently-played \
-     user-library-read";
+     user-read-recently-played";
 
   var state = generateRandomString(16);
 
@@ -93,7 +98,7 @@ app.get("/auth/callback", (req, res) => {
     })
     .catch((error) => {
       if (error.response) {
-        console.log(error);
+        console.error(error);
       }
     });
 });
@@ -163,14 +168,13 @@ async function fetchWebApi(endpoint, method, hasJSON = true, body = "") {
   }
   const res = await fetch(url, req);
 
-  if (res.status == 401) {
+  if (res.status == 401 || res.status == 405) {
     // refresh token and retry
     await refreshToken();
-    //retry?
-    //return await fetchWebApi(endpoint, method, hasJSON, body);
+    return await fetchWebApi(endpoint, method, hasJSON, body);
   } else {
     if (res.status >= 300) {
-      console.error(res);
+      refreshToken();
     } else if (hasJSON) {
       return await res.json();
     } else {
@@ -181,6 +185,7 @@ async function fetchWebApi(endpoint, method, hasJSON = true, body = "") {
 
 async function refreshToken() {
   let authOptions = {
+    method: "POST",
     url: "https://accounts.spotify.com/api/token",
     headers: {
       "content-type": "application/x-www-form-urlencoded",
@@ -190,18 +195,54 @@ async function refreshToken() {
           spotify_client_id + ":" + spotify_client_secret,
         ).toString("base64"),
     },
-    form: {
+    data: {
       grant_type: "refresh_token",
       refresh_token: refresh_token,
+      client_id: spotify_client_id,
     },
     json: true,
   };
 
-  let response = await axios(authOptions);
-  if (response.status === 200) {
-    access_token = response.data.access_token;
-    refresh_token = response.data.refresh_token;
-  } else {
+  try {
+    let response = await axios(authOptions);
+    if (response.status === 200) {
+      access_token = response.data.access_token;
+      if ("refresh_token" in response.data) {
+        refresh_token = response.data.refresh_token;
+      }
+      console.log("refreshed tokens");
+      writeTokens();
+    } else {
+      console.error("failed to refresh token");
+    }
+  } catch (err) {
     console.error("failed to refresh token");
+    console.error(err);
+  }
+}
+
+function readTokens() {
+  try {
+    const data = JSON.parse(fs.readFileSync(TOKENS_FILE));
+
+    access_token = data.access_token;
+    refresh_token = data.refresh_token;
+  } catch (err) {
+    console.error("Error reading tokens from file");
+    console.error(err);
+  }
+}
+
+function writeTokens() {
+  try {
+    const data = {
+      access_token: access_token,
+      refresh_token: refresh_token,
+    };
+    const jsonData = JSON.stringify(data);
+    fs.writeFileSync(TOKENS_FILE, jsonData);
+    console.log("wrote new tokens to file");
+  } catch (err) {
+    console.error("Error writing tokens to file");
   }
 }
