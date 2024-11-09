@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../api/api";
 import styles from "./Playlists.module.css";
 
-export default function Playlists(props: { num: number }) {
+export default function Playlists(props: { num: number; loggedIn: boolean }) {
   const [playlists, setPlaylists] = useState([]);
   const [page, setPageNum] = useState(0);
   const [maxPage, setMaxPage] = useState(0);
@@ -17,6 +17,13 @@ export default function Playlists(props: { num: number }) {
 
     //TODO: separate props and offset refresh
   }, [props.num, page]);
+  const playOrShow = (uri: string, url: string) => {
+    if (props.loggedIn === true) {
+      api.playContext(uri);
+    } else {
+      open(url, "_blank");
+    }
+  };
 
   return (
     <>
@@ -26,18 +33,28 @@ export default function Playlists(props: { num: number }) {
         <div className={styles.content}>
           <div>
             <ul>
-              {playlists.map(({ name, uri }: { name: string; uri: string }) => (
-                <li className={styles.info}>
-                  <div
-                    className={styles.playlist}
-                    onClick={() => {
-                      api.playContext(uri);
-                    }}
-                  >
-                    {`${name}`}
-                  </div>
-                </li>
-              ))}
+              {playlists.map(
+                ({
+                  name,
+                  uri,
+                  external_urls,
+                }: {
+                  name: string;
+                  uri: string;
+                  external_urls: { spotify: string };
+                }) => (
+                  <li className={styles.info}>
+                    <div
+                      className={styles.playlist}
+                      onClick={() => {
+                        playOrShow(uri, external_urls.spotify);
+                      }}
+                    >
+                      {`${name}`}
+                    </div>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
         </div>

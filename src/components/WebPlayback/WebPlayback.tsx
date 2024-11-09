@@ -110,7 +110,7 @@ export default function WebPlayback(props: { token: string }) {
         <div className={styles["main-wrapper"]}>
           {is_active && current_track !== null ? (
             <div>
-              {context.uri !== "" && "uri" in context ? (
+              {"uri" in context && context.uri !== "" && context.uri !== "-" ? (
                 <div className={styles.playlist}>
                   <span>Playing From...</span>
                   <div>

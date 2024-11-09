@@ -46,8 +46,8 @@ app.get("/auth/login", (_, res) => {
   var scope =
     "streaming \
      user-modify-playback-state \
-     user-read-playback-state \
-     user-read-recently-played";
+     user-read-currently-playing \
+     user-read-playback-state";
 
   var state = generateRandomString(16);
 
@@ -118,8 +118,11 @@ const generateRandomString = function (length) {
   return text;
 };
 
-app.get("/spotify/getTrackHistory", async function (_, res) {
-  res.json(await fetchWebApi("v1/me/player/recently-played?limit=10", "GET"));
+app.get("/spotify/getTrackHistory", async function (req, res) {
+  const limit = req.query.limit || 10;
+  res.json(
+    await fetchWebApi(`v1/me/player/recently-played?limit=${limit}`, "GET"),
+  );
 });
 
 app.get("/spotify/getPlaylists", async function (req, res) {

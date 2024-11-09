@@ -5,48 +5,43 @@ export type Artist = {
 class api {
   token: string = "";
   refreshToken: string = "";
-  spotify_id: string = "shr4yhlvorob9kwnv8uy1a6z4";
 
   //TODO: change
   serverUrl = "http://localhost:5000";
 
-  async getToken(refresh: boolean = false) {
-    if (refresh) {
-      open("/auth/login", "_self");
-    }
-    const response = await fetch("/auth/token");
-    const json = await response.json();
-    this.token = json.access_token;
-    return json.access_token;
+  getToken() {
+    open(this.serverUrl + "/auth/login", "_self");
   }
 
   async #fetchWebApi(
     endpoint: string,
     method: string,
-    hasJSON: boolean = true,
     body: string = "",
-  ) {
+  ): Promise<string> {
+    //user is not logged in
+    if (this.token === "") {
+      return "";
+    }
     const url = `https://api.spotify.com/${endpoint}`;
     const req = {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
       method,
+      body,
     };
 
-    if (body != "") {
-      req.body = body;
-    }
     const res = await fetch(url, req);
 
     if (res.status == 401) {
       // refresh token (expires each hour)
-      await this.getToken(true);
+      console.log("refreshing token");
+      this.getToken();
+      //return await this.#fetchWebApi(endpoint, method, body);
+      return "";
     } else {
       if (res.status >= 300) {
-        throw new Error(res.status + "");
-      } else if (hasJSON) {
-        return await res.json();
+        throw new Error(res + "");
       } else {
         return "";
       }
@@ -56,12 +51,10 @@ class api {
   async #fetchServerApi(endpoint: string) {
     const url = this.serverUrl + endpoint;
     const res = (await fetch(url)).json();
-    console.log(res);
     return res;
   }
 
   async getTopTracks(top: number, time_range: number) {
-    // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const range =
       time_range === 0
         ? "short_term"
@@ -75,31 +68,31 @@ class api {
     ).items;
   }
 
-  async getTrackHistory() {
-    return (await this.#fetchServerApi("/spotify/getTrackHistory")).items;
+  async getTrackHistory(limit: number = 10) {
+    return (
+      await this.#fetchServerApi(`/spotify/getTrackHistory?limit=${limit}`)
+    ).items;
   }
 
   async transferPlayback(ids: string[]) {
     return await this.#fetchWebApi(
       "v1/me/player",
       "PUT",
-      false,
       JSON.stringify({ device_ids: ids }),
     );
   }
 
   async pause() {
-    return await this.#fetchWebApi("v1/me/player/pause", "PUT", false);
+    return await this.#fetchWebApi("v1/me/player/pause", "PUT");
   }
 
   async play(uri: string = "") {
     if (uri === "") {
-      return await this.#fetchWebApi("v1/me/player/play", "PUT", false);
+      return await this.#fetchWebApi("v1/me/player/play", "PUT");
     } else {
       return await this.#fetchWebApi(
         "v1/me/player/play",
         "PUT",
-        false,
         JSON.stringify({ uris: [uri] }),
       );
     }
@@ -109,7 +102,6 @@ class api {
     return await this.#fetchWebApi(
       "v1/me/player/play",
       "PUT",
-      false,
       JSON.stringify({ context_uri: context_uri }),
     );
   }
@@ -124,11 +116,11 @@ class api {
   }
 
   async skipToNext() {
-    return await this.#fetchWebApi("v1/me/player/next", "POST", false);
+    return await this.#fetchWebApi("v1/me/player/next", "POST");
   }
 
   async skipToPrevious() {
-    return await this.#fetchWebApi("v1/me/player/previous", "POST", false);
+    return await this.#fetchWebApi("v1/me/player/previous", "POST");
   }
 
   async getPlaylistsResp(limit: number, offset: number) {
@@ -144,11 +136,7 @@ class api {
   }
 
   async addToQueue(uri: string) {
-    return await this.#fetchWebApi(
-      `v1/me/player/queue?uri=${uri}`,
-      "POST",
-      false,
-    );
+    return await this.#fetchWebApi(`v1/me/player/queue?uri=${uri}`, "POST");
   }
 
   async getAvailableDevices() {

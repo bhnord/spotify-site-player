@@ -13,16 +13,11 @@ function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("access_token") || "";
   const refreshToken = urlParams.get("refresh_token") || "";
-  console.log(token);
 
   useEffect(() => {
     async function getToken() {
-      if (!token || !refreshToken) {
-        open("/auth/login", "_self");
-      } else {
-        api.token = token;
-        api.refreshToken = refreshToken;
-      }
+      api.token = token;
+      api.refreshToken = refreshToken;
     }
     getToken();
   }, []);
@@ -42,49 +37,49 @@ function App() {
 
   return (
     <div>
-      {token === "" ? (
-        <Login />
-      ) : (
-        <>
-          <div id="background-opacity" className="hidden"></div>
-          <div className="button-bar">
-            <button className="help-button" onClick={togglePopup}>
-              ?
+      <>
+        <div id="background-opacity" className="hidden"></div>
+        <div className="button-bar">
+          <button className="help-button" onClick={togglePopup}>
+            ?
+          </button>
+          <button className="play-on-pi-button hidden" onClick={playOnDevice}>
+            play on device
+          </button>
+        </div>
+        <div id="container">
+          <div id="help-popup" className="hidden">
+            <button id="close-popup-button" onClick={togglePopup}>
+              X
             </button>
-            <button className="play-on-pi-button hidden" onClick={playOnDevice}>
-              play on device
-            </button>
+            <Instructions />
           </div>
-          <div id="container">
-            <div id="help-popup" className="hidden">
-              <button id="close-popup-button" onClick={togglePopup}>
-                X
-              </button>
-              <Instructions />
-            </div>
 
-            <div className="section-column">
-              <div className="section-row">
-                <TopSongs top={10} />
-              </div>
-              <div className="section-row">
-                <RecentSongs />
-              </div>
+          <div className="section-column">
+            <div className="section-row">
+              <TopSongs top={10} />
             </div>
-            <div className="section-column">
-              <div className="section-row">
-                <LikedSongs num={10} />
-              </div>
-              <div className="section-row">
-                <Playlists num={10} />
-              </div>
+            <div className="section-row">
+              <RecentSongs />
             </div>
           </div>
+          <div className="section-column">
+            <div className="section-row">
+              <LikedSongs num={10} />
+            </div>
+            <div className="section-row">
+              <Playlists num={10} loggedIn={token !== ""} />
+            </div>
+          </div>
+        </div>
+        {token === "" ? (
+          <Login />
+        ) : (
           <div id="playback">
             <WebPlayback token={token} />
           </div>
-        </>
-      )}
+        )}
+      </>
     </div>
   );
 }

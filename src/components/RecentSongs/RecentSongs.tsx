@@ -9,7 +9,15 @@ export default function RecentSongs() {
 
   useEffect(() => {
     async function getHistory() {
-      const history = await api.getTrackHistory();
+      let history = await api.getTrackHistory(20);
+
+      const songs = {};
+      history = history.filter((val, index, arr) => {
+        const uniq = !(val.track.uri in songs);
+        songs[val.track.uri] = "x";
+        return uniq;
+      });
+      history = history.slice(0, Math.min(history.length, 10));
       setTrackHistory(history);
     }
     getHistory();
@@ -31,27 +39,36 @@ export default function RecentSongs() {
       <div className={styles.content}>
         <div>
           <ul>
-            {trackHistory.map(({ track, played_at }) => {
-              const curr = new Date(played_at);
-              return (
-                <li
-                  className={styles.info}
-                  onClick={() => {
-                    api.play(track.uri);
-                  }}
-                >
-                  <div className={styles.track}>
-                    <span>{`${track.name}`}</span>
-                    <span
-                      style={{ color: "#f7d6c5", opacity: 0.5 }}
-                    >{` by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}</span>
-                  </div>
-                  <div className={styles.date}>
-                    {`${days[curr.getDay()]} ${curr.getMonth() + 1}-${curr.getDate()}`}
-                  </div>
-                </li>
-              );
-            })}
+            {trackHistory.map(
+              ({
+                track,
+                played_at,
+              }: {
+                track: { uri: string; name: string; artists: Artist[] };
+                played_at: string;
+              }) => {
+                const curr = new Date(played_at);
+                return (
+                  <li
+                    key={track.uri}
+                    className={styles.info}
+                    onClick={() => {
+                      api.play(track.uri);
+                    }}
+                  >
+                    <div className={styles.track}>
+                      <span>{`${track.name}`}</span>
+                      <span
+                        style={{ color: "#f7d6c5", opacity: 0.5 }}
+                      >{` by ${track.artists.map((artist: Artist) => artist.name).join(", ")}`}</span>
+                    </div>
+                    <div className={styles.date}>
+                      {`${days[curr.getDay()]} ${curr.getMonth() + 1}-${curr.getDate()}`}
+                    </div>
+                  </li>
+                );
+              },
+            )}
           </ul>
         </div>
       </div>
