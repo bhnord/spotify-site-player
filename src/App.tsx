@@ -34,18 +34,10 @@ function App() {
     background?.classList.toggle("hidden");
   };
 
-  const playOnPi = async () => {
+  const playOnDevice = async () => {
     const availableDevices = await api.getAvailableDevices();
 
-    availableDevices.devices.map(
-      async ({ id, name }: { id: string; name: string }) => {
-        if (name === "raspberry pi") {
-          console.log(id);
-          await api.transferPlayback([id]);
-          await api.play();
-        }
-      },
-    );
+    console.log(availableDevices);
   };
 
   return (
@@ -59,8 +51,8 @@ function App() {
             <button className="help-button" onClick={togglePopup}>
               ?
             </button>
-            <button className="play-on-pi-button" onClick={playOnPi}>
-              play on pi
+            <button className="play-on-pi-button hidden" onClick={playOnDevice}>
+              play on device
             </button>
           </div>
           <div id="container">

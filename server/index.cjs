@@ -2,9 +2,6 @@ const express = require("express");
 const dotenv = require("dotenv");
 const axios = require("axios");
 
-let access_token = "";
-let refresh_token = "";
-
 const port = 5000;
 
 dotenv.config();
@@ -13,6 +10,9 @@ let spotify_id = "shr4yhlvorob9kwnv8uy1a6z4";
 let spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 let spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 let ip = process.env.HOST_IP;
+
+let access_token = process.env.ACCESS_TOKEN;
+let refresh_token = process.env.REFRESH_TOKEN;
 
 let app = express();
 
@@ -84,9 +84,8 @@ app.get("/auth/callback", (req, res) => {
   axios(authOptions)
     .then((response) => {
       if (response.status === 200) {
-        //TODO: decrease context,
-        access_token = response.data.access_token;
-        refresh_token = response.data.refresh_token;
+        let access_token = response.data.access_token;
+        let refresh_token = response.data.refresh_token;
         res.redirect(
           `/?access_token=${access_token}&refresh_token=${refresh_token}`,
         );
@@ -165,11 +164,13 @@ async function fetchWebApi(endpoint, method, hasJSON = true, body = "") {
   const res = await fetch(url, req);
 
   if (res.status == 401) {
-    // refresh token (expires each hour)
-    await getToken(true);
+    // refresh token and retry
+    await refreshToken();
+    //retry?
+    //return await fetchWebApi(endpoint, method, hasJSON, body);
   } else {
     if (res.status >= 300) {
-      console.log("oops");
+      console.error(res);
     } else if (hasJSON) {
       return await res.json();
     } else {
@@ -178,38 +179,29 @@ async function fetchWebApi(endpoint, method, hasJSON = true, body = "") {
   }
 }
 
-async function getToken(refresh = false) {
-  if (refresh) {
-    open("/auth/login", "_self");
-  }
-  const response = await fetch("/auth/token");
-  const json = await response.json();
-  this.token = json.access_token;
-  return json.access_token;
-}
+async function refreshToken() {
+  let authOptions = {
+    url: "https://accounts.spotify.com/api/token",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      Authorization:
+        "Basic " +
+        new Buffer.from(
+          spotify_client_id + ":" + spotify_client_secret,
+        ).toString("base64"),
+    },
+    form: {
+      grant_type: "refresh_token",
+      refresh_token: refresh_token,
+    },
+    json: true,
+  };
 
-//function refreshToken() {
-//  let authOptions = {
-//    url: "https://accounts.spotify.com/api/token",
-//    headers: {
-//      "content-type": "application/x-www-form-urlencoded",
-//      Authorization:
-//        "Basic " +
-//        new Buffer.from(
-//          spotify_client_id + ":" + spotify_client_secret,
-//        ).toString("base64"),
-//    },
-//    form: {
-//      grant_type: "refresh_token",
-//      refresh_token: refresh_token,
-//    },
-//    json: true,
-//  };
-//
-//  axios(authOptions).then((response) => {
-//    if (response.status === 200) {
-//      access_token = response.data.access_token;
-//      refresh_token = response.data.refresh_token;
-//    }
-//  });
-//}
+  let response = await axios(authOptions);
+  if (response.status === 200) {
+    access_token = response.data.access_token;
+    refresh_token = response.data.refresh_token;
+  } else {
+    console.error("failed to refresh token");
+  }
+}
