@@ -6,11 +6,10 @@ class api {
   token: string = "";
   refreshToken: string = "";
 
-  //TODO: change
-  serverUrl = "http://localhost:5000";
+  serverSock = import.meta.env.VITE_SERVER_SOCK;
 
   getToken() {
-    open(this.serverUrl + "/auth/login", "_self");
+    open(this.serverSock + "/auth/login", "_self");
   }
 
   async #fetchWebApi(
@@ -49,7 +48,7 @@ class api {
   }
 
   async #fetchServerApi(endpoint: string) {
-    const url = this.serverUrl + endpoint;
+    const url = this.serverSock + endpoint;
     const res = (await fetch(url)).json();
     return res;
   }

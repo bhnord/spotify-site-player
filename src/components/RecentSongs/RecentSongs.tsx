@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import api, { Artist } from "../../api/api";
 import styles from "./RecentSongs.module.css";
 
-//TODO: remove duplicates
 export default function RecentSongs() {
   const [trackHistory, setTrackHistory] = useState([]);
   const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];

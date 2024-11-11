@@ -12,12 +12,10 @@ const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const port = process.env.PORT;
 const client_url = process.env.CLIENT_URL;
-const server_url = process.env.SERVER_URL;
+const server_ip = process.env.SERVER_IP;
 
 let access_token = "";
 let refresh_token = "";
-
-let justRefreshed = false;
 
 readTokens();
 
@@ -57,7 +55,7 @@ app.get("/auth/login", (_, res) => {
     response_type: "code",
     client_id: spotify_client_id,
     scope: scope,
-    redirect_uri: `${client_url}/auth/callback`,
+    redirect_uri: `${server_ip}:${port}/auth/callback`,
     state: state,
   });
 
@@ -75,7 +73,7 @@ app.get("/auth/callback", (req, res) => {
     url: "https://accounts.spotify.com/api/token",
     data: {
       code: code,
-      redirect_uri: `${client_url}/auth/callback`,
+      redirect_uri: `${server_ip}:${port}/auth/callback`,
       grant_type: "authorization_code",
     },
     headers: {
@@ -94,7 +92,7 @@ app.get("/auth/callback", (req, res) => {
         let access_token = response.data.access_token;
         let refresh_token = response.data.refresh_token;
         res.redirect(
-          `/?access_token=${access_token}&refresh_token=${refresh_token}`,
+          `${client_url}/?access_token=${access_token}&refresh_token=${refresh_token}`,
         );
       }
     })
@@ -106,7 +104,7 @@ app.get("/auth/callback", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening at ${server_url}:${port}`);
+  console.log(`Listening at ${server_ip}:${port}`);
 });
 
 const generateRandomString = function (length) {
