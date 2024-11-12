@@ -41,6 +41,7 @@ export default function LikedSongs(props: { num: number }) {
                       onClick={() => {
                         api.play(track.uri);
                       }}
+                      key={track.uri}
                     >
                       <div className={styles.track}>
                         <span>{`${track.name}`}</span>

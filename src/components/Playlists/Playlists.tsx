@@ -43,15 +43,14 @@ export default function Playlists(props: { num: number; loggedIn: boolean }) {
                   uri: string;
                   external_urls: { spotify: string };
                 }) => (
-                  <li className={styles.info}>
-                    <div
-                      className={styles.playlist}
-                      onClick={() => {
-                        playOrShow(uri, external_urls.spotify);
-                      }}
-                    >
-                      {`${name}`}
-                    </div>
+                  <li
+                    className={styles.info}
+                    key={uri}
+                    onClick={() => {
+                      playOrShow(uri, external_urls.spotify);
+                    }}
+                  >
+                    <div className={styles.playlist}>{`${name}`}</div>
                   </li>
                 ),
               )}

@@ -67,6 +67,7 @@ export default function TopSongs(props: { top: number }) {
                     onClick={() => {
                       api.play(uri);
                     }}
+                    key={uri}
                   >
                     <div className={styles.track}>
                       <span>{`${name}`}</span>
