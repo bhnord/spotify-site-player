@@ -10,6 +10,15 @@
   align-items: center;
   flex: 1;
 }
+@media (max-width: 800px) {
+  #container {
+    display: block;
+  }
+  #playback {
+    margin: auto;
+    width: 60% !important;
+  }
+}
 .section-row {
   margin: 20px;
   align-items: center;

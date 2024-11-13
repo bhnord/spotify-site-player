@@ -158,78 +158,74 @@ export default function WebPlayback(props: { token: string }) {
 
   return (
     <>
-      <div className="container">
-        <div className={styles["main-wrapper"]}>
-          {is_active && current_track ? (
-            <div>
-              {context &&
-              "uri" in context &&
-              context.uri !== "" &&
-              context.uri !== "-" ? (
-                <div className={styles.playlist}>
-                  <span>Playing From...</span>
-                  <div>
-                    <span style={{ textTransform: "capitalize" }}>
-                      {context.uri.split(":")[1]}:{" "}
-                    </span>
-                    {context.metadata?.context_description}
-                  </div>
+      <div className={styles.container}>
+        {is_active && current_track ? (
+          <div>
+            {context &&
+            "uri" in context &&
+            context.uri !== "" &&
+            context.uri !== "-" ? (
+              <div className={styles.playlist}>
+                <span>Playing From...</span>
+                <div>
+                  <span style={{ textTransform: "capitalize" }}>
+                    {context.uri.split(":")[1]}:{" "}
+                  </span>
+                  {context.metadata?.context_description}
                 </div>
-              ) : (
-                <div></div>
-              )}
-              <div className={styles.track}>
-                <img
-                  src={current_track.album.images[0].url}
-                  alt=""
-                  className={styles["now-playing-cover"]}
-                />
-                <div className={styles["now-playing"]}>
-                  <div className={styles["curr-track"]}>
-                    {current_track.name}
-                  </div>
-                  <div className={styles.artist}>
-                    {current_track.artists[0].name}
-                  </div>
+              </div>
+            ) : (
+              <div></div>
+            )}
+            <div className={styles.track}>
+              <img
+                src={current_track.album.images[0].url}
+                alt=""
+                className={styles["now-playing-cover"]}
+              />
+              <div className={styles["now-playing"]}>
+                <div className={styles["curr-track"]}>{current_track.name}</div>
+                <div className={styles.artist}>
+                  {current_track.artists[0].name}
                 </div>
               </div>
             </div>
-          ) : (
-            <div>
-              <div>[ player is inactive ]</div>
-              <button
-                className={styles.button}
-                onClick={() => {
-                  api.transferPlayback([device_id]);
-                }}
-              >
-                RECONNECT PLAYER
-              </button>
-            </div>
-          )}
-          <div className={styles.buttons}>
+          </div>
+        ) : (
+          <div>
+            <div>[ player is inactive ]</div>
             <button
               className={styles.button}
               onClick={() => {
-                last();
+                api.transferPlayback([device_id]);
               }}
             >
-              &lt;&lt;
-            </button>
-
-            <button className={styles.button} onClick={togglePlay}>
-              {is_paused ? "PLAY" : "PAUSE"}
-            </button>
-
-            <button
-              className={styles.button}
-              onClick={() => {
-                skip();
-              }}
-            >
-              &gt;&gt;
+              RECONNECT PLAYER
             </button>
           </div>
+        )}
+        <div className={styles.buttons}>
+          <button
+            className={styles.button}
+            onClick={() => {
+              last();
+            }}
+          >
+            &lt;&lt;
+          </button>
+
+          <button className={styles.button} onClick={togglePlay}>
+            {is_paused ? "PLAY" : "PAUSE"}
+          </button>
+
+          <button
+            className={styles.button}
+            onClick={() => {
+              skip();
+            }}
+          >
+            &gt;&gt;
+          </button>
         </div>
       </div>
       {
