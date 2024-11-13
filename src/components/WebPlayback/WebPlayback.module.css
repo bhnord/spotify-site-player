@@ -12,10 +12,11 @@
 
 .button {
   margin: 5px;
+  color: white;
+  border-radius: 12px;
 }
 
 .buttons {
-  border-radius: 12px;
   padding: 12px;
 }
 

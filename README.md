@@ -10,7 +10,7 @@ add these six variables to your .env file:
 SPOTIFY_ID                #spotify id of your user
 SPOTIFY_CLIENT_ID         #client id of your spotify app
 SPOTIFY_CLIENT_SECRET     #client secret of your spotify app
-SERVER_IP                 #ip of your server
+SERVER_URL                #ip of your server (or <ip>:<port> of server)
 PORT                      #port you want your server to run on
 CLIENT_URL                #url where your webapp is hosted
 VITE_SERVER_SOCK          #<ip>:<port> of where your server is hosted

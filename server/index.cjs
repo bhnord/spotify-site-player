@@ -12,7 +12,7 @@ const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const port = process.env.PORT;
 const client_url = process.env.CLIENT_URL;
-const server_ip = process.env.SERVER_IP;
+const server_url = process.env.SERVER_URL;
 
 let access_token = "";
 let refresh_token = "";
@@ -55,7 +55,7 @@ app.get("/auth/login", (_, res) => {
     response_type: "code",
     client_id: spotify_client_id,
     scope: scope,
-    redirect_uri: `${server_ip}:${port}/auth/callback`,
+    redirect_uri: `${server_url}/auth/callback`,
     state: state,
   });
 
@@ -73,7 +73,7 @@ app.get("/auth/callback", (req, res) => {
     url: "https://accounts.spotify.com/api/token",
     data: {
       code: code,
-      redirect_uri: `${server_ip}:${port}/auth/callback`,
+      redirect_uri: `${server_url}/auth/callback`,
       grant_type: "authorization_code",
     },
     headers: {
@@ -104,7 +104,7 @@ app.get("/auth/callback", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening at ${server_ip}:${port}`);
+  console.log(`Listening on http://localhost:${port}`);
 });
 
 const generateRandomString = function (length) {
