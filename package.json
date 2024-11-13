@@ -9,7 +9,7 @@
     "webapp": "vite",
     "predeploy": "yarn run build",
     "build": "tsc && vite build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist --cname spotifyplayer.bhnord.com",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
