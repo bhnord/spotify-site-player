@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import api, { Artist } from "../../api/api";
 import styles from "./RecentSongs.module.css";
+import { Item } from "../../api/api";
 
 export default function RecentSongs() {
-  const [trackHistory, setTrackHistory] = useState([]);
+  const [trackHistory, setTrackHistory] = useState<Item[]>([]);
   const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
   useEffect(() => {
     async function getHistory() {
       let history = await api.getTrackHistory(20);
 
-      const songs = {};
-      history = history.filter((val, index, arr) => {
+      const songs: { [id: string]: string } = {};
+      history = history.filter((val: Item) => {
         const uniq = !(val.track.uri in songs);
         songs[val.track.uri] = "x";
         return uniq;

@@ -1,6 +1,24 @@
 export type Artist = {
   name: string;
 };
+export type SongsResponse = {
+  items: Item[];
+  total: number;
+};
+export type Item = {
+  track: Track;
+  added_at: string;
+  played_at: string;
+};
+export type Track = {
+  uri: string;
+  name: string;
+  artists: Artist[];
+};
+
+type PlayerResponse = {
+  is_playing: boolean;
+} | null;
 
 class api {
   token: string = "";
@@ -16,10 +34,10 @@ class api {
     endpoint: string,
     method: string,
     body: string = "",
-  ): Promise<string> {
+  ): Promise<PlayerResponse> {
     //user is not logged in
     if (this.token === "") {
-      return "";
+      return null;
     }
     const url = `https://api.spotify.com/${endpoint}`;
     const req = {
@@ -37,12 +55,12 @@ class api {
       console.log("refreshing token");
       this.getToken();
       //return await this.#fetchWebApi(endpoint, method, body);
-      return "";
+      return null;
     } else {
       if (res.status >= 300) {
         throw new Error(res + "");
       } else {
-        return "";
+        return null;
       }
     }
   }
@@ -97,7 +115,7 @@ class api {
     }
   }
 
-  async playContext(context_uri) {
+  async playContext(context_uri: string) {
     return await this.#fetchWebApi(
       "v1/me/player/play",
       "PUT",
@@ -108,7 +126,7 @@ class api {
   async togglePlay() {
     try {
       const res = await this.#fetchWebApi("v1/me/player", "GET");
-      res.is_playing ? this.pause() : this.play();
+      res?.is_playing ? this.pause() : this.play();
     } catch {
       console.error("no playback");
     }
