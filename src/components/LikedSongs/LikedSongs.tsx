@@ -36,7 +36,11 @@ export default function LikedSongs(props: { num: number }) {
         <div className={styles.content}>
           <div>
             <ul>
-              {liked_songs.map(({ track, added_at }) => {
+              {liked_songs.map((liked_song) => {
+                if (!liked_song) {
+                  return;
+                }
+                const { track, added_at } = liked_song;
                 const curr = new Date(added_at);
                 return (
                   <li

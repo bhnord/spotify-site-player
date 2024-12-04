@@ -32,29 +32,39 @@ export default function Playlists(props: { num: number; loggedIn: boolean }) {
         <hr />
         <div className={styles.content}>
           <div>
-            <ul>
-              {playlists.map(
-                ({
-                  name,
-                  uri,
-                  external_urls,
-                }: {
-                  name: string;
-                  uri: string;
-                  external_urls: { spotify: string };
-                }) => (
-                  <li
-                    className={styles.info}
-                    key={uri}
-                    onClick={() => {
-                      playOrShow(uri, external_urls.spotify);
-                    }}
-                  >
-                    <div className={styles.playlist}>{`${name}`}</div>
-                  </li>
-                ),
-              )}
-            </ul>
+            {playlists ? (
+              <ul>
+                {playlists.map((playlist) => {
+                  //spotify api is returning null playlists??
+                  if (!playlist) {
+                    return;
+                  }
+                  const {
+                    name,
+                    uri,
+                    external_urls,
+                  }: {
+                    name: string;
+                    uri: string;
+                    external_urls: { spotify: string };
+                  } = playlist;
+
+                  return (
+                    <li
+                      className={styles.info}
+                      key={uri}
+                      onClick={() => {
+                        playOrShow(uri, external_urls.spotify);
+                      }}
+                    >
+                      <div className={styles.playlist}>{`${name}`}</div>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
         <section id={styles.footer}>

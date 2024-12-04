@@ -53,15 +53,16 @@ export default function TopSongs(props: { top: number }) {
         <div className={styles.content}>
           <div>
             <ul>
-              {topSongs.map(
-                (
-                  {
-                    name,
-                    artists,
-                    uri,
-                  }: { name: string; artists: Array<Artist>; uri: string },
-                  index,
-                ) => (
+              {topSongs.map((song, index) => {
+                if (!song) {
+                  return;
+                }
+                const {
+                  name,
+                  artists,
+                  uri,
+                }: { name: string; artists: Array<Artist>; uri: string } = song;
+                return (
                   <li
                     className={styles.info}
                     onClick={() => {
@@ -77,8 +78,8 @@ export default function TopSongs(props: { top: number }) {
                     </div>
                     <div className={styles.ranking}>{`${index + 1}`}</div>
                   </li>
-                ),
-              )}
+                );
+              })}
             </ul>
           </div>
         </div>
