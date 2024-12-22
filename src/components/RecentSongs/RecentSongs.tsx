@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import api, { Artist } from "../../api/api";
+import api, { Artist, Item, Track } from "../../api/api";
 import styles from "./RecentSongs.module.css";
-import { Item } from "../../api/api";
 
-export default function RecentSongs() {
+export default function RecentSongs(props: { loggedIn: boolean }) {
   const [trackHistory, setTrackHistory] = useState<Item[]>([]);
   const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
@@ -22,6 +21,15 @@ export default function RecentSongs() {
     }
     getHistory();
   }, []);
+
+  const playOrShow = (uri: string, url: string) => {
+    if (props.loggedIn === true) {
+      api.playContext(uri);
+    } else {
+      open(url, "_blank");
+    }
+  };
+
 
   return (
     <div className={styles.container}>
@@ -47,7 +55,7 @@ export default function RecentSongs() {
                 track,
                 played_at,
               }: {
-                track: { uri: string; name: string; artists: Artist[] };
+                track: Track;
                 played_at: string;
               } = historyItem;
               const curr = new Date(played_at);
@@ -56,7 +64,7 @@ export default function RecentSongs() {
                   key={track.uri}
                   className={styles.info}
                   onClick={() => {
-                    api.play(track.uri);
+                    playOrShow(track.uri, track.external_urls.spotify)
                   }}
                 >
                   <div className={styles.track}>

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import api, { Artist } from "../../api/api";
+import api, { Artist, Track } from "../../api/api";
 import styles from "./TopSongs.module.css";
 
-export default function TopSongs(props: { top: number }) {
+export default function TopSongs(props: { top: number, loggedIn: boolean }) {
   const [topSongs, setTopSongs] = useState([]);
   const [range, setRange] = useState(2);
 
@@ -13,6 +13,14 @@ export default function TopSongs(props: { top: number }) {
     }
     getTop();
   }, [props.top, range]);
+
+  const playOrShow = (uri: string, url: string) => {
+    if (props.loggedIn === true) {
+      api.playContext(uri);
+    } else {
+      open(url, "_blank");
+    }
+  };
 
   return (
     <>
@@ -61,12 +69,13 @@ export default function TopSongs(props: { top: number }) {
                   name,
                   artists,
                   uri,
-                }: { name: string; artists: Array<Artist>; uri: string } = song;
+                  external_urls,
+                }: Track = song;
                 return (
                   <li
                     className={styles.info}
                     onClick={() => {
-                      api.play(uri);
+                      playOrShow(uri, external_urls.spotify);
                     }}
                     key={uri}
                   >

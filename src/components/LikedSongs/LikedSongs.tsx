@@ -3,7 +3,7 @@ import styles from "./LikedSongs.module.css";
 import api from "../../api/api";
 import { Artist, SongsResponse, Item } from "../../api/api";
 
-export default function LikedSongs(props: { num: number }) {
+export default function LikedSongs(props: { num: number , loggedIn: boolean }) {
   const [liked_songs, setLikedSongs] = useState<Item[]>([]);
   const [page, setPageNum] = useState(0);
   const [maxPage, setMaxPage] = useState(0);
@@ -18,6 +18,14 @@ export default function LikedSongs(props: { num: number }) {
     }
     getSongs();
   }, [props.num, page]);
+
+  const playOrShow = (uri: string, url: string) => {
+    if (props.loggedIn === true) {
+      api.playContext(uri);
+    } else {
+      open(url, "_blank");
+    }
+  };
 
   return (
     <>
@@ -46,7 +54,7 @@ export default function LikedSongs(props: { num: number }) {
                   <li
                     className={styles.info}
                     onClick={() => {
-                      api.play(track.uri);
+                      playOrShow(track.uri, track.external_urls.spotify)
                     }}
                     key={track.uri}
                   >

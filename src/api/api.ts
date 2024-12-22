@@ -14,6 +14,7 @@ export type Track = {
   uri: string;
   name: string;
   artists: Artist[];
+  external_urls: { spotify: string };
 };
 
 type PlayerResponse = {

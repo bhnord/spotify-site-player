@@ -13,6 +13,7 @@ function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("access_token") || "";
   const refreshToken = urlParams.get("refresh_token") || "";
+  const loggedIn = token !== "";
 
   useEffect(() => {
     async function getToken() {
@@ -54,21 +55,20 @@ function App() {
             </button>
             <Instructions />
           </div>
-
           <div className="section-column">
             <div className="section-row">
-              <TopSongs top={10} />
+              <TopSongs top={10} loggedIn={loggedIn}/>
             </div>
             <div className="section-row">
-              <RecentSongs />
+              <RecentSongs loggedIn={loggedIn}/>
             </div>
           </div>
           <div className="section-column">
             <div className="section-row">
-              <LikedSongs num={10} />
+              <LikedSongs num={10} loggedIn={loggedIn}/>
             </div>
             <div className="section-row">
-              <Playlists num={10} loggedIn={token !== ""} />
+              <Playlists num={10} loggedIn={loggedIn}/>
             </div>
           </div>
         </div>
