@@ -24,12 +24,11 @@ export default function RecentSongs(props: { loggedIn: boolean }) {
 
   const playOrShow = (uri: string, url: string) => {
     if (props.loggedIn === true) {
-      api.playContext(uri);
+      api.play(uri);
     } else {
       open(url, "_blank");
     }
   };
-
 
   return (
     <div className={styles.container}>
@@ -64,7 +63,7 @@ export default function RecentSongs(props: { loggedIn: boolean }) {
                   key={track.uri}
                   className={styles.info}
                   onClick={() => {
-                    playOrShow(track.uri, track.external_urls.spotify)
+                    playOrShow(track.uri, track.external_urls.spotify);
                   }}
                 >
                   <div className={styles.track}>
